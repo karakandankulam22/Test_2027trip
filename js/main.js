@@ -36,5 +36,20 @@
     document.querySelectorAll('.nav-links a').forEach(a => {
       if (a.getAttribute('href') === path) a.classList.add('active');
     });
+
+    const dropdown = document.querySelector('.nav-dropdown');
+    const dropToggle = document.querySelector('.nav-drop-toggle');
+    if (dropdown && dropToggle) {
+      dropToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) dropdown.classList.remove('open');
+      });
+      dropdown.querySelectorAll('.nav-drop-menu a').forEach(a => {
+        if (a.getAttribute('href') === path) a.classList.add('active');
+      });
+    }
   });
 })();

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split the Bill — 2027 Senior Trip</title>
+<meta name="description" content="Splitwise and Venmo tips for tracking group expenses, plus a live bill-split calculator for 7 travelers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="disclaimer-strip">💸 App names and features are current as of this guide — double-check pricing/availability in your app store.</div>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="flag">🇬🇷</span> 2027 Senior Trip</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="flights.html">Flights</a></li>
+      <li><a href="hostels.html">Hostels</a></li>
+      <li><a href="food.html">Food</a></li>
+      <li><a href="historical-sites.html">Historical Sites</a></li>
+      <li><a href="beaches.html">Beaches</a></li>
+      <li><a href="nightlife.html">Nightlife</a></li>
+      <li class="nav-dropdown">
+        <button class="nav-drop-toggle" type="button">More ▾</button>
+        <ul class="nav-drop-menu">
+          <li><a href="map.html">📍 Interactive Map</a></li>
+          <li><a href="outfits.html">👗 What to Wear</a></li>
+          <li><a href="photo-spots.html">📸 Photo Spots</a></li>
+          <li><a href="split-bill.html">💸 Split the Bill</a></li>
+          <li><a href="emergency.html">🚨 Emergency Info</a></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container">
+    <span class="eyebrow">Nobody wants to be the group accountant</span>
+    <h1>Split the Bill</h1>
+    <p class="lede">A quick way to divide any group cost, plus how to track shared expenses all trip without a single "wait, who paid for what" conversation.</p>
+  </div>
+</header>
+
+<section>
+  <div class="container">
+    <div class="section-head"><div><span class="section-tag">Quick tool</span><h2>Split calculator</h2></div></div>
+    <div class="split-calc">
+      <div class="split-field">
+        <label for="bill-amount">Total bill</label>
+        <div class="input-wrap"><span>$</span><input type="number" id="bill-amount" placeholder="0.00" min="0" step="0.01" value="140"></div>
+      </div>
+      <div class="split-field">
+        <label for="bill-people">People splitting</label>
+        <input type="number" id="bill-people" min="1" step="1" value="7">
+      </div>
+      <div class="split-result">
+        <div class="num" id="split-output">$20.00</div>
+        <div class="label">per person</div>
+      </div>
+    </div>
+    <div style="max-width:340px;margin-top:16px;">
+      <label style="display:block;font-size:.8rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;">Add tip?</label>
+      <div class="tip-toggle">
+        <button type="button" class="tip-btn active" data-tip="0">0%</button>
+        <button type="button" class="tip-btn" data-tip="10">10%</button>
+        <button type="button" class="tip-btn" data-tip="15">15%</button>
+        <button type="button" class="tip-btn" data-tip="20">20%</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt-bg">
+  <div class="container">
+    <div class="section-head"><div><span class="section-tag">The system</span><h2>How to actually track it all trip</h2></div></div>
+    <div class="grid grid-2">
+      <div class="card"><div class="card-body">
+        <h3>📋 Splitwise — the running tally</h3>
+        <p class="card-desc">Create a group ("Greece 2027") before you fly. Every time someone pays for something shared — a hostel booking, a group dinner, ferry tickets — they log it in the app, split equally or by who actually had the gyro. Splitwise keeps a running "who owes who" total the whole trip, in whatever currency, so nobody has to do mental math at 1am.</p>
+        <a class="card-link-btn" href="https://www.splitwise.com/" target="_blank" rel="noopener">splitwise.com ↗</a>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <h3>💵 Venmo — actually settling up</h3>
+        <p class="card-desc">Splitwise tracks the debt; Venmo (or Zelle/Cash App) actually moves the money. Settle up at the end of each island — Athens, then Santorini, then Mykonos — instead of one giant reconciliation on the flight home.</p>
+        <a class="card-link-btn" href="https://venmo.com/" target="_blank" rel="noopener">venmo.com ↗</a>
+      </div></div>
+    </div>
+    <div class="info-callout" style="margin-top:22px;">
+      <p class="mt-0"><b>Suggested rhythm:</b> rotate who books/pays for the big shared items (hostels, ferries) so it's not always the same person fronting cash — log it in Splitwise the moment you pay, and settle up on Venmo before you fall asleep that night, not "eventually."</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head"><div><span class="section-tag">Reference</span><h2>Common shared costs</h2></div></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Expense</th><th>Split how</th><th>Suggested payer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hostel rooms</td><td>Equally, per island</td><td>Rotate by island (3 people take turns)</td></tr>
+          <tr><td>Ferry tickets</td><td>Equally, booked together</td><td>Whoever books first, logged immediately</td></tr>
+          <tr><td>Group dinners</td><td>Equally, unless orders are very uneven</td><td>Rotate nightly</td></tr>
+          <tr><td>Beach club cabana / sunbeds</td><td>Split by who's actually there</td><td>Whoever's at the register</td></tr>
+          <tr><td>Taxis / group Beat rides</td><td>Equally among riders only</td><td>Whoever's phone booked it</td></tr>
+          <tr><td>Delos boat + entry</td><td>Individually — optional excursion</td><td>Everyone pays their own</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="alt-bg">
+  <div class="container">
+    <div class="section-head"><div><span class="section-tag">Good to know</span><h2>Tipping in Greece</h2></div></div>
+    <div class="grid grid-3">
+      <div class="card"><div class="card-body"><h3>🍽️ Restaurants</h3><p class="card-desc">Not obligatory — a service charge is often already included. Rounding up or adding 5–10% for good service is appreciated, not expected.</p></div></div>
+      <div class="card"><div class="card-body"><h3>🚕 Taxis</h3><p class="card-desc">Round up to the nearest euro. No standard percentage expected.</p></div></div>
+      <div class="card"><div class="card-body"><h3>🍹 Bars &amp; beach clubs</h3><p class="card-desc">Leaving small change or ~5% for table service at beach clubs is a nice touch, especially if you're camped out all day.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>2027 Senior Trip</h4>
+        <p>A trip-planning guide built by and for our crew of 7 — Athens, Santorini &amp; Mykonos, June 11–17, 2027.</p>
+      </div>
+      <div>
+        <h4>Guide</h4>
+        <ul>
+          <li><a href="flights.html">Flights</a></li>
+          <li><a href="hostels.html">Hostels</a></li>
+          <li><a href="food.html">Food</a></li>
+          <li><a href="historical-sites.html">Historical Sites</a></li>
+          <li><a href="beaches.html">Beaches</a></li>
+          <li><a href="nightlife.html">Nightlife</a></li>
+          <li><a href="outfits.html">What to Wear</a></li>
+          <li><a href="photo-spots.html">Photo Spots</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>In Case of Emergency</h4>
+        <ul>
+          <li>🚨 EU Emergency: <b>112</b></li>
+          <li>👮 Tourist Police: <b>1571</b></li>
+          <li><a href="emergency.html">Full emergency &amp; taxi list →</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Built for our Greece crew · 7 travelers · $3,000/person budget</span>
+      <span>Prices &amp; details are estimates — always verify before booking.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+(function () {
+  var amountEl = document.getElementById('bill-amount');
+  var peopleEl = document.getElementById('bill-people');
+  var outputEl = document.getElementById('split-output');
+  var tipBtns = document.querySelectorAll('.tip-btn');
+  var tipPct = 0;
+
+  function recalc() {
+    var amount = parseFloat(amountEl.value) || 0;
+    var people = parseInt(peopleEl.value, 10) || 1;
+    var total = amount * (1 + tipPct / 100);
+    var perPerson = total / Math.max(people, 1);
+    outputEl.textContent = '$' + perPerson.toFixed(2);
+  }
+
+  amountEl.addEventListener('input', recalc);
+  peopleEl.addEventListener('input', recalc);
+  tipBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tipBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      tipPct = parseFloat(btn.dataset.tip);
+      recalc();
+    });
+  });
+
+  recalc();
+})();
+</script>
+</body>
+</html>
