@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Map — 2027 Senior Trip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { overflow-x: hidden; }
+  main { display: block; }
+</style>
+</head>
+<body>
+
+<div class="disclaimer-strip">📍 Tap any pin or list item to jump to it — use Prev/Next to click through every stop on the trip.</div>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="flag">🇬🇷</span> 2027 Senior Trip</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="flights.html">Flights</a></li>
+      <li><a href="hostels.html">Hostels</a></li>
+      <li><a href="food.html">Food</a></li>
+      <li><a href="historical-sites.html">Historical Sites</a></li>
+      <li><a href="beaches.html">Beaches</a></li>
+      <li><a href="nightlife.html">Nightlife</a></li>
+      <li><a href="map.html">Map</a></li>
+      <li><a href="emergency.html">Emergency Info</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<div class="map-shell">
+  <aside class="map-sidebar">
+    <div class="map-filters">
+      <div>
+        <div style="font-size:.78rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;">Island</div>
+        <div class="filter-row" id="island-filters">
+          <button class="filter-chip active" data-island="all">All</button>
+          <button class="filter-chip" data-island="Athens">🏛️ Athens</button>
+          <button class="filter-chip" data-island="Santorini">🌋 Santorini</button>
+          <button class="filter-chip" data-island="Mykonos">🏖️ Mykonos</button>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.78rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;">Category</div>
+        <div class="filter-row" id="category-filters"></div>
+      </div>
+    </div>
+    <div class="map-list" id="map-list"></div>
+    <div class="map-nav-controls">
+      <button class="btn btn-ghost btn-sm" id="prev-btn">← Prev</button>
+      <button class="btn btn-primary btn-sm" id="next-btn">Next →</button>
+    </div>
+  </aside>
+  <div id="map-canvas"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/locations.js"></script>
+<script>
+(function () {
+  var map = L.map('map-canvas', { scrollWheelZoom: true });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  var allBounds = L.latLngBounds(TRIP_LOCATIONS.map(function (l) { return [l.lat, l.lng]; }));
+  map.fitBounds(allBounds, { padding: [40, 40] });
+
+  var islandBounds = {};
+  ["Athens", "Santorini", "Mykonos"].forEach(function (isl) {
+    var pts = TRIP_LOCATIONS.filter(function (l) { return l.island === isl; }).map(function (l) { return [l.lat, l.lng]; });
+    islandBounds[isl] = L.latLngBounds(pts);
+  });
+
+  function makeIcon(cat) {
+    var meta = CATEGORY_META[cat];
+    return L.divIcon({
+      className: '',
+      html: '<div class="marker-pin" style="background:' + meta.color + '"><span>' + meta.emoji + '</span></div>',
+      iconSize: [30, 30],
+      iconAnchor: [15, 28],
+      popupAnchor: [0, -26]
+    });
+  }
+
+  var state = { island: 'all', categories: Object.keys(CATEGORY_META), activeId: null };
+  var markers = {};
+
+  TRIP_LOCATIONS.forEach(function (loc) {
+    var m = L.marker([loc.lat, loc.lng], { icon: makeIcon(loc.category) });
+    var meta = CATEGORY_META[loc.category];
+    var priceHtml = loc.price ? '<span class="chip">' + loc.price + '</span>' : '';
+    var ratingHtml = loc.rating ? '<span class="chip rating">★ ' + loc.rating + '</span>' : '';
+    m.bindPopup(
+      '<div class="map-popup">' +
+      '<h4>' + meta.emoji + ' ' + loc.name + '</h4>' +
+      '<div class="card-meta">' + ratingHtml + priceHtml + '<span class="chip dist">' + loc.island + '</span></div>' +
+      '<p style="font-size:.85rem;color:var(--text-muted);margin:6px 0;">' + loc.blurb + '</p>' +
+      '<a class="btn btn-primary btn-sm" href="' + loc.link + '" target="_blank" rel="noopener">' + loc.linkLabel + ' ↗</a>' +
+      '</div>'
+    );
+    m.addTo(map);
+    markers[loc.id] = m;
+  });
+
+  var categoryFilterEl = document.getElementById('category-filters');
+  Object.keys(CATEGORY_META).forEach(function (cat) {
+    var meta = CATEGORY_META[cat];
+    var btn = document.createElement('button');
+    btn.className = 'filter-chip active';
+    btn.dataset.cat = cat;
+    btn.textContent = meta.emoji + ' ' + meta.label;
+    categoryFilterEl.appendChild(btn);
+  });
+
+  function getFiltered() {
+    return TRIP_LOCATIONS.filter(function (l) {
+      var islandOk = state.island === 'all' || l.island === state.island;
+      var catOk = state.categories.indexOf(l.category) !== -1;
+      return islandOk && catOk;
+    });
+  }
+
+  function renderList() {
+    var listEl = document.getElementById('map-list');
+    listEl.innerHTML = '';
+    var filtered = getFiltered();
+    filtered.forEach(function (loc) {
+      var meta = CATEGORY_META[loc.category];
+      var item = document.createElement('div');
+      item.className = 'map-list-item' + (loc.id === state.activeId ? ' active' : '');
+      item.dataset.id = loc.id;
+      item.innerHTML =
+        '<div class="mli-title">' + meta.emoji + ' ' + loc.name + '</div>' +
+        '<div class="mli-meta">' + loc.island + (loc.price ? ' · ' + loc.price : '') + '</div>';
+      item.addEventListener('click', function () { goTo(loc.id); });
+      listEl.appendChild(item);
+    });
+    Object.keys(markers).forEach(function (id) {
+      var loc = TRIP_LOCATIONS.find(function (l) { return l.id === id; });
+      var visible = filtered.indexOf(loc) !== -1;
+      if (visible) { if (!map.hasLayer(markers[id])) markers[id].addTo(map); }
+      else { if (map.hasLayer(markers[id])) map.removeLayer(markers[id]); }
+    });
+  }
+
+  function goTo(id) {
+    var loc = TRIP_LOCATIONS.find(function (l) { return l.id === id; });
+    if (!loc) return;
+    state.activeId = id;
+    map.flyTo([loc.lat, loc.lng], 15, { duration: 0.6 });
+    markers[id].openPopup();
+    renderList();
+    var activeItem = document.querySelector('.map-list-item.active');
+    if (activeItem) activeItem.scrollIntoView({ block: 'nearest' });
+  }
+
+  document.getElementById('island-filters').addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    document.querySelectorAll('#island-filters .filter-chip').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.island = btn.dataset.island;
+    renderList();
+    if (state.island === 'all') { map.fitBounds(allBounds, { padding: [40, 40] }); }
+    else { map.fitBounds(islandBounds[state.island], { padding: [50, 50] }); }
+  });
+
+  categoryFilterEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    var cat = btn.dataset.cat;
+    btn.classList.toggle('active');
+    if (btn.classList.contains('active')) {
+      if (state.categories.indexOf(cat) === -1) state.categories.push(cat);
+    } else {
+      state.categories = state.categories.filter(function (c) { return c !== cat; });
+    }
+    renderList();
+  });
+
+  document.getElementById('prev-btn').addEventListener('click', function () {
+    var filtered = getFiltered();
+    if (!filtered.length) return;
+    var idx = filtered.findIndex(function (l) { return l.id === state.activeId; });
+    var nextIdx = idx <= 0 ? filtered.length - 1 : idx - 1;
+    goTo(filtered[nextIdx].id);
+  });
+  document.getElementById('next-btn').addEventListener('click', function () {
+    var filtered = getFiltered();
+    if (!filtered.length) return;
+    var idx = filtered.findIndex(function (l) { return l.id === state.activeId; });
+    var nextIdx = idx === -1 || idx === filtered.length - 1 ? 0 : idx + 1;
+    goTo(filtered[nextIdx].id);
+  });
+
+  map.on('popupopen', function (e) {
+    var latlng = e.popup.getLatLng();
+    var found = TRIP_LOCATIONS.find(function (l) { return Math.abs(l.lat - latlng.lat) < 1e-6 && Math.abs(l.lng - latlng.lng) < 1e-6; });
+    if (found) { state.activeId = found.id; renderList(); }
+  });
+
+  // Deep-link support: map.html?id=acropolis
+  var params = new URLSearchParams(location.search);
+  var startId = params.get('id');
+  renderList();
+  if (startId && markers[startId]) {
+    setTimeout(function () { goTo(startId); }, 300);
+  }
+})();
+</script>
+<script src="js/main.js"></script>
+</body>
+</html>
